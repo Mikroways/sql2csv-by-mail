@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eo pipefail
+
+DIR=$(dirname $0)
+QUERY=${QUERY:?QUERY must be set}
+REPORT_NAME=${REPORT_NAME:-report}
+
+$DIR/lib/sql2csv.py "$QUERY" > /tmp/$REPORT_NAME.csv
+zip -j /tmp/$REPORT_NAME.zip /tmp/$REPORT_NAME.csv
+$DIR/lib/sendmail.py /tmp/$REPORT_NAME.zip
